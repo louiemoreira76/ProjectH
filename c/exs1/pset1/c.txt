@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+char* cryptography(char m[], short key);
+int cesar(int decimal, short key);
+short get_key(void);
+
+int main(void) {
+    printf("Forneça a chave de criptografia: ");
+    short chave = get_key(); // Obtém a chave
+
+    char msg[100];
+    printf("Digite a palavra que deseja criptografar: ");
+    
+    fgets(msg, sizeof(msg), stdin); // Lê a mensagem
+
+    // Remove o '\n' do final da string lida por fgets
+    msg[strcspn(msg, "\n")] = '\0';
+
+    // Verifica se a mensagem está vazia
+    if (strlen(msg) == 0) {
+        printf("A mensagem não pode estar vazia.\n");
+        return 1; // Encerra o programa se a mensagem estiver vazia
+    }
+
+    char* crypto = cryptography(msg, chave); // Criptografa a mensagem
+
+    printf("Original: %s\n", msg);
+    printf("Criptografado: %s\n", crypto); // Exibe a mensagem criptografada
+    
+    return 0;
+}   
+
+char* cryptography(char m[], short key) {
+    for (int i = 0; m[i] != '\0'; i++) {
+        if (isupper(m[i])) {
+            int letra = m[i] - 'A';
+            int crito = cesar(letra, key);
+            m[i] = 'A' + crito; 
+        }
+        else if (islower(m[i])) {
+            int letra = m[i] - 'a';
+            int crito = cesar(letra, key);
+            m[i] = 'a' + crito; 
+        }
+    }
+    return m;
+}
+
+int cesar(int decimal, short key) {
+    return (decimal + key) % 26;
+}
+
+short get_key(void) {
+    short k;
+    while (1) {
+        printf("Insira uma chave (0-26): "); // Mensagem para o usuário
+        if (scanf("%hd", &k) != 1) { // Verifica se a leitura foi bem-sucedida
+            printf("Entrada inválida. Tente novamente.\n");
+            while (getchar() != '\n'); // Limpa o buffer
+        } else if (k < 0 || k > 26) { // Verifica se a chave está no intervalo válido
+            printf("Chave inválida, tente novamente (0 a 26): ");
+        } else {
+            break; // Saia do loop se a chave for válida
+        }
+    }
+    getchar(); // Limpa o buffer após a leitura da chave
+    return k; // Retorna a chave válida
+}
