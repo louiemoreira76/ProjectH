@@ -1,0 +1,14 @@
+tempo execução do programa. Cronometre cada ordenação com diferentes entradas
+
+sort1 uses: TODO  Selection Sort              
+
+How do you know?: TODO
+
+sort2 uses: TODO Bubble Sort
+
+How do you know?: TODO
+
+sort3 uses: TODO Merge Sort
+
+How do you know?: TODO
+    

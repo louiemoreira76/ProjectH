@@ -1,0 +1,4 @@
+Experiência comprovada em desenvolvimento de software em C/C++.
+Conhecimento em integração de sistemas com hardware externo através de SDKs ou APIs.
+Experiência com bancos de dados PostgreSQL e SQL Server.
+Habilidade para desenvolver e manter interfaces de usuário front-end.

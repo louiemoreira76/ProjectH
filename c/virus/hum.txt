@@ -1,0 +1,51 @@
+Função de Processamento de Mensagens da Janela
+
+A função WindowProc é onde as mensagens (eventos) da janela são processadas, como abrir, fechar, redimensionar, etc.
+
+LRESULT é o tipo de retorno da função, um valor numérico que indica o resultado do processamento.
+CALLBACK é uma convenção de chamada usada pela API do Windows.
+
+HWND hwnd: Um identificador para a janela que recebeu a mensagem.
+UINT uMsg: O código da mensagem (tipo de evento) que está sendo processado.
+WPARAM wParam e LPARAM lParam: Parâmetros adicionais para a mensagem.
+
+
+   PostQuitMessage(0); //envia msg endicando programa deve ser fechado
+
+-------------------------------------------------------------------
+
+Função Principal - WinMain
+
+Esta é a função principal de uma aplicação Windows (equivalente ao main em aplicativos de console). Ela inicializa a janela e inicia o loop de mensagens.
+
+HINSTANCE hInstance: Identificador para a instância da aplicação.
+HINSTANCE hPrevInstance: Identificador da instância anterior (não é mais usado e geralmente é NULL).
+LPSTR lpCmdLine: Ponteiro para a linha de comando (parâmetros de execução).
+int nCmdShow: Especifica como a janela deve ser mostrada (minimizada, maximizada, etc.).
+
+WNDCLASS wc = {0};: Cria uma estrutura WNDCLASS chamada wc para definir as propriedades da janela. A {0} inicializa todos os valores dessa estrutura com zero.
+
+CreateWindowEx: Cria a janela com as propriedades especificadas.
+0: Estilos adicionais (aqui não usamos nenhum).
+CLASS_NAME: Nome da classe da janela (definida anteriormente).
+"Minha Primeira Janela em C": Título da janela.
+WS_OVERLAPPEDWINDOW: Estilo da janela, incluindo borda, título, e controles padrão.
+CW_USEDEFAULT, CW_USEDEFAULT: Posição inicial da janela (automática).
+500, 300: Largura e altura da janela.
+NULL: Identificador da janela mãe (não há nenhuma).
+NULL: Menu da janela (não há menu).
+hInstance: Instância da aplicação.
+NULL: Parâmetro adicional (não usado aqui).
+
+if (hwnd == NULL) return 0;: Verifica se a criação da janela falhou (NULL) e encerra o programa se isso acontecer.  
+
+
+MSG msg = {0};: Cria uma estrutura MSG chamada msg para armazenar mensagens de eventos.
+
+while (GetMessage(&msg, NULL, 0, 0)): Loop principal do programa, que continua enquanto há mensagens para processar.
+
+GetMessage(&msg, NULL, 0, 0): Captura a próxima mensagem de evento e armazena em msg.
+Quando o usuário fecha a janela, o loop termina.
+TranslateMessage(&msg);: Prepara a mensagem para ser interpretada pelo sistema, como mensagens de teclado.
+
+DispatchMessage(&msg);: Envia a mensagem para a função WindowProc, onde será processada.
