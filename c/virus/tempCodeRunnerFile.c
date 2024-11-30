@@ -1,0 +1,1 @@
+gcc trote.c -o trote -mwindows -lgdi32 -lcomctl32
