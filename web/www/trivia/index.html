@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>Trivia!</title>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>Trivia!</h1>
+    </div>
+
+    <div class="container">
+        <!-- Parte 1: Pergunta de múltipla escolha -->
+        <div class="section">
+            <h2>Part 1: Multiple Choice</h2>
+            <hr>
+            <h3>Which planet is known as the Red Planet?</h3>
+            <button class="option" data-correct="false">Earth</button>
+            <button class="option" data-correct="false">Venus</button>
+            <button class="option" data-correct="true">Mars</button>
+            <p id="feedback-multiple-choice" class="feedback"></p>
+        </div>
+
+        <!-- Parte 2: Pergunta de resposta livre -->
+        <div class="section">
+            <h2>Part 2: Free Response</h2>
+            <hr>
+            <h3>What is the capital of France?</h3>
+            <input type="text" id="free-response-input" placeholder="Type your answer">
+            <button id="submit-response">Submit</button>
+            <p id="feedback-free-response" class="feedback"></p>
+        </div>
+    </div>
+</body>
+</html>
